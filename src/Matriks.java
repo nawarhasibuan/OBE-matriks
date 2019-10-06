@@ -1,5 +1,5 @@
 /*
-	Nama		:Panawar Hasibuan
+	Author		:Panawar Hasibuan
 	Email		:panawarhsb28@gmail.com
 	Nama file 	:Matriks.java
 	Tanggal		:27 September 2019
@@ -22,6 +22,9 @@ class Matriks {
 
 	//Data Matriks
 	private float augm[][];		//matriks augmented
+	private int pivotBaris[];
+	private int pivotKolom[];
+	private float faktorDeterminan;
 	private int baris;	
 	private int kolom;
 
