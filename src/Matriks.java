@@ -1,22 +1,15 @@
-/*
-	Author		:Panawar Hasibuan
-	Email		:panawarhsb28@gmail.com
+/**
+	@author		:Panawar Hasibuan
+	@email		:panawarhsb28@gmail.com
 	Nama file 	:Matriks.java
 	Tanggal		:27 September 2019
 */
+
 import java.util.*;
 import java.io.*;
 
-class Matriks {
-	/*Data*/
-	/*
-	 	1) data pada indek (0,0) digunakan untuk menampung faktor skala determinan
-		2) kolom-kolom pada baris indeks 0 digunakan untuk menampung lokasi baris leading one (pivot) pada kolom tersebut
-		3) baris-baris pada kolom indeks 0 digunakan untuk menampung lokasi kolom leading one (pivot) pada baris tersebut
-		4) lokasi pivot diinisialisasi dengan 0 untuk setiap baris/kolom
-		5) lokasi pivot diisi 0 jika tidak terdapat pivot pada baris/kolom tersebut
-	*/
-
+class Matriks
+{
 	//konstanta
 	final int MAX = 100;
 
@@ -32,33 +25,33 @@ class Matriks {
 
 	//--Konstruktor--
 	public Matriks() {
-		augm = new float[MAX+1][MAX+1];
+		augm = new float[MAX][MAX];
 		baris = 0;
 		kolom = 0;
-		augm[0][0] = 1;
-		for (int i = 1; i <= MAX; i++) {
-			augm[0][i] = 0;
-			augm[i][0] = 0;
+		faktorDeterminan = 1;
+		for (int i = 0; i < MAX; i++) {
+			pivotBaris[i] = 0;
+			pivotKolom[i] = 0;
 		}
 	}
 	public Matriks(int brs, int kol) {
-		augm = new float[MAX+1][MAX+1];
+		augm = new float[MAX][MAX];
 		baris = brs;
 		kolom = kol;
-		augm[0][0] = 1;
-		for (int i = 1; i <= MAX; i++) {
-			augm[0][i] = 0;
-			augm[i][0] = 0;
+		faktorDeterminan = 1;
+		for (int i = 0; i < MAX; i++) {
+			pivotBaris[i] = 0;
+			pivotKolom[i] = 0;
 		}
 	}
 	public Matriks(int n) {
-		augm = new float[MAX+1][MAX+1];
+		augm = new float[MAX][MAX];
 		baris = n;
 		kolom = n;
-		augm[0][0] = 1;
-		for (int i = 1; i <= n; i++) {
-			augm[0][i] = i;
-			augm[i][0] = i;
+		faktorDeterminan = 1;
+		for (int i = 0; i < n; i++) {
+			pivotBaris[i] = 0;
+			pivotKolom[i] = 0;
 		}
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= n; j++) {
@@ -114,7 +107,7 @@ class Matriks {
 	public boolean isIndeksValid(int brs, int kol)
 	//mengembalikan apakah indeks (brs,kol) valid untuk matriks this
 	{
-		return (brs <= baris) && (kol <= kolom);
+		return (brs < baris) && (kol < kolom);
 	}
 	public void bacaAugm(int brs) throws IOException
 	//membaca  isi augm dari keyboard
@@ -180,9 +173,11 @@ class Matriks {
 			}
 		}
 	}
+	/**
+	 * menyalin matriks M
+	 * @param M Matriks yang akan disalan
+	 */
 	public void copyMatriks(Matriks M)
-	//I.S sembarang
-	//I.F menyalin Matriks M ke matriks this
 	{
 		//set baris dan kolom
 		setBaris(M.getBaris());
