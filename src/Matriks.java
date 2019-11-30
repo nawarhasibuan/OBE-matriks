@@ -1,14 +1,16 @@
 /**
-	@author		:Panawar Hasibuan
-	@email		:panawarhsb28@gmail.com
-	Nama file 	:Matriks.java
-	Tanggal		:27 September 2019
-*/
+ *@author		:Panawar Hasibuan
+ *@email		:panawarhsb28@gmail.com
+ *@file 		:Matriks.java
+ *@date		:27 September 2019
+ */
+
+package nawar.matriks.src;
 
 import java.util.*;
 import java.io.*;
 
-class Matriks
+public class Matriks
 {
 	//konstanta
 	final int MAX = 100;
@@ -44,6 +46,13 @@ class Matriks
 			pivotKolom[i] = 0;
 		}
 	}
+	/**
+	 * Mengembalikan matriks identitas I
+	 * 
+	 * @param n ukuran matriks I
+	 * 
+	 * @return Matriks identitas berukuran nxn
+	 */
 	public Matriks(int n) {
 		augm = new float[MAX][MAX];
 		baris = n;
@@ -64,13 +73,31 @@ class Matriks
 		}
 	}
 
+
 	//--Selektor
 	public int getBaris() {
 		return this.baris;
 	}
+
 	public int getKolom() {
 		return this.kolom;
 	}
+
+	/**
+	 * Mengembalikan array multi-dimensi augm Matriks.
+	 * 
+	 * @return this->augm
+	 */
+	public float[][] getAugm() {
+		float[][] newAugm = new float[getBaris()][getKolom()];
+
+		for (int i = 0; i < getBaris(); i++) {
+			for (int j = 0; j < getKolom(); j++) {
+				newAugm[i][j] = getElmt(i, j);
+			}
+		}
+	}
+
 	public float getElmt(int brs, int kol) {
 		if (isIndeksValid(brs,kol)) {
 			return this.augm[brs][kol];
@@ -79,119 +106,114 @@ class Matriks
 		}
 	}
 
+	/**
+	 * 
+	 * @param brs true untuk pivot baris, false untuk pivot kolom
+	 * @return array pivot
+	 */
+	public int[] getPivot(boolean brs) {
+		int[] pivot;
+
+		if (brs) {
+			pivot = new int[getBaris()];
+			for (int i = 0; i < getBaris(); i++) {
+				pivot[i] = pivotBaris[i];
+			}
+		} else {
+			pivot = new int[getKolom()];
+			for (int j = 0; j < getKolom(); j++) {
+				pivot[j] = pivotKolom[j];
+			}
+		}
+
+		return pivot;
+	}
+
+
 	//--Setter
 	public void setBaris(int brs) {
 		this.baris = brs;
 	}
+
 	public void setKolom(int kol) {
 		this.kolom = kol;
 	}
-	public void setAugm(float newAugm[][],int brs, int kol)
-	//mengisi this.augm dengan newAugm
-	//mengisi nilai this.baris dan this.kolom setelah pengisian augm selesai
-	{
-		this.augm = newAugm;
+
+
+	/**
+	 * Mengisi this->augm dengan array multi-dimensi
+	 * 
+	 * @param newAugm
+	 * @param brs
+	 * @param kol
+	 */
+	public void setAugm(float newAugm[][],int brs, int kol) {
 		setBaris(brs);
 		setKolom(kol);
+
+		faktorDeterminan = 1;
+		for(int i = 0; i < brs; i++) {
+			pivotBaris[i] = 0;
+		}
+		for(int j = 0; j < kol; j++) {
+			pivotKolom[j] = 0;
+		}
+
+		for (int i = 0; i < brs; i++) {
+			for (int j = 0; j < kol; j++) {
+				setElmt(i, j, newAugm[i][j]);
+			}
+		}
 	}
+
 	public void setElmt(int brs, int kol, float el) {
 		if (isIndeksValid(brs,kol)) {
 			this.augm[brs][kol] = el;	
 		}
 	}
 
+
 	//--Method Primitif
+	/**
+	 * cek apakah matriks kosong
+	 * 
+	 * @return boolean
+	 */
 	public boolean isEmpty() {
 		return (getBaris() == 0 && getKolom() == 0);
 	}
-	public boolean isIndeksValid(int brs, int kol)
-	//mengembalikan apakah indeks (brs,kol) valid untuk matriks this
-	{
+
+	/**
+	 * cek apakah indeks(brs,kol) valid untuk Matriks this
+	 * 
+	 * @param brs indeks baris
+	 * @param kol indeks kolom
+	 * @return boolean
+	 */
+	public boolean isIndeksValid(int brs, int kol) {
 		return (brs < baris) && (kol < kolom);
 	}
-	public void bacaAugm(int brs) throws IOException
-	//membaca  isi augm dari keyboard
-	{
-		for (int i = 1; i <= brs; i++) {
-			String input;
-			int j;
-			float f;
 
-	      	InputStreamReader isr = new InputStreamReader(System.in);
-    	  	BufferedReader br = new BufferedReader(isr);
-      
-      		input = br.readLine();
-
-	    	// create a new scanner with the specified String Object
-    		Scanner scanner = new Scanner(input);
-
-    		// use US locale to be able to identify floats in the string
-	      	scanner.useLocale(Locale.US);
-
-    	  	// find the next float token and print it
-      		// loop for the whole scanner
-      		j = 1;
-      		while (scanner.hasNext()) {
-         		// if the next is a float, print found and the float
-         		if (scanner.hasNextFloat()) {
-            		f = scanner.nextFloat();
-            		setElmt(i,j,f);
-            		j++;
-         		}
-      		}
-
-      		// close the scanner
-      		scanner.close();
-		}
+	public boolean isSquere() {
+		return (getBaris() == getKolom());
 	}
-	public void tulisAugm()
-	//menuliskan isi augm ke layar
-	/*
-		dituliskan dalam bentuk:
-		
-		[1][1]	[1][2]	...	[1][M]
-		[2][1]	[2][2]	...	[2][M]
-		.
-		.
-		.
-		[N][1]	[N][2]	...	[N][M]
 
-	*/
-	{
-		if (isEmpty()) {
-			System.out.print("Matriks kosong\n");
-		} else {
-			for (int i = 1; i <= getBaris(); i++) {
-				for (int j = 1; j <= getKolom(); j++) {
-					if (getElmt(i,j) == -0) {
-						System.out.printf("0.00	");	
-					} else {
-						System.out.printf("%.2f	",getElmt(i,j));
-					}
-				}
-				System.out.print("\n");
-			}
-		}
-	}
 	/**
-	 * menyalin matriks M
-	 * @param M Matriks yang akan disalan
+	 * Menyalin Matriks.
+	 * 
+	 * @return hasil salinan Matriks
 	 */
-	public void copyMatriks(Matriks M)
-	{
-		//set baris dan kolom
-		setBaris(M.getBaris());
-		setKolom(M.getKolom());
-		//set elemen
-		for (int i = 0; i <= getBaris(); i++) {
-			for (int j = 0; j <= getKolom(); j++) {
-				setElmt(i,j,M.getElmt(i,j));
-			}
-		}
+	public Matriks copyMatriks() {
+		Matriks M = new Matriks(getBaris(),getKolom());
+
+		M.setAugm(getAugm(), getBaris(), getKolom());
+		M.pivotBaris = getPivot(true);
+		M.pivotKolom = getPivot(false);
+
+		return M;
 	}
-	public Matriks konkatKolom(Matriks M)
-	//melakukan konkatonasi matriks this dan M
-	{
+
+	public Matriks konkatKolom(Matriks M) {
 		//kamus
 		Matriks M1;
 		//algoritma
