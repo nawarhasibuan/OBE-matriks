@@ -5,7 +5,6 @@
  *@date			:27 September 2019
  */
 
-package nawar.matriks.src;
 
 public class Matriks
 {
@@ -17,8 +16,8 @@ public class Matriks
 	private int baris;	
 	private int kolom;
 
-	private boolean setBrs = false;
-	private boolean setKlm = false;
+	protected boolean setBrs = false;
+	protected boolean setKlm = false;
 
 	/*METHOD*/
 
@@ -56,11 +55,18 @@ public class Matriks
 		setBrs = setKlm = true;
 	}
 
-
-	//--Selektor
+	/**
+	 * Jumlah baris matriks.
+	 * 
+	 * @return banyak baris matriks.
+	 */
 	public int getBaris() {
 		return this.baris;
 	}
+	/**
+	 * 
+	 * @return banyak kolom matriks.
+	 */
 	public int getKolom() {
 		return this.kolom;
 	}
@@ -78,6 +84,12 @@ public class Matriks
 		}
 		return newAugm;
 	}
+	/**
+	 * Mengembalikan elemen matriks pada posisi tertentu.
+	 * @param brs posisi baris.
+	 * @param kol posisi kolom.
+	 * @return elemen pada indeks (brs,kol), 0 jika (brs,kol) tidak valid untuk matriks.
+	 */
 	public float getElmt(int brs, int kol) {
 		if (isIndeksValid(brs,kol)) {
 			return this.augm[brs][kol];
@@ -109,14 +121,13 @@ public class Matriks
 	 * @param kol
 	 */
 	public void setKolom(int kol) {
-		if (setKlm) {
+		if (!setKlm) {
 			this.kolom = kol;
 			this.setKlm = true;
 			if (setBrs) {
 				this.augm = new float[this.baris][this.kolom];
 			}
 		}
-		
 	}
 	/**
 	 * Mengisi aug dengan array multi-dimensi.
